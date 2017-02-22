@@ -20,57 +20,96 @@ sssd::tools_package_version:   'latest'
 ### other SIMP modules and services. The variables that are commented out
 ### are resolved using simplib::lookup, a special function that helps SIMP
 ### integrate existing modules. Setting these values in hiera will supersede
-### simplib::lookup, and is not recommended. 
+### simplib::lookup, and is not recommended.
 sssd::app_pki_dir:              '/etc/pki/simp_apps/sssd/x509'
-# sssd::auditd:                 false      
-# sssd::pki:                    false          
-# sssd::app_pki_cert_source:    '/etc/pki/simp/x509' 
+# sssd::auditd:                 false
+# sssd::pki:                    false
+# sssd::app_pki_cert_source:    '/etc/pki/simp/x509'
 
-### These parameters are only used inside templates that set values 
-### inside of the sssd config file (usually /etc/sssd/sssd.conf). 
-### You can find information about which variables a template is used in
-### in the init.pp manifest, and you can find a full list of the variables
-### used by a specific template inside that template's manifest. 
-sssd::allowed_uids:                      []
-sssd::autofs_negative_timeout:           null
-sssd::command:                           null
-sssd::config_file_version:               2
-sssd::debug_level:                       null
-sssd::debug_timestamps:                  true
-sssd::debug_microseconds:                false
-sssd::default_domain_suffix:             null
-sssd::default_shell:                     null
-sssd::description:                       null
-sssd::domains:                           null 
-sssd::entry_negative_timeout:            15
-sssd::entry_cache_nowait_percentage:     0
-sssd::enum_cache_timeout:                120
-sssd::fallback_homedir:                  null
-sssd::filter_groups:                     'root'
-sssd::filter_users:                      'root'  
-sssd::filter_users_in_groups:            true
-sssd::full_name_format:                  null
-sssd::get_domains_timeout:               null
-sssd::krb5_rcache_dir:                   null
-sssd::memcache_timeout:                  null
-sssd::offline_credentials_expiration:    0 
-sssd::offline_failed_login_attempts:     3
-sssd::offline_failed_login_delay:        5
-sssd::override_homedir:                  null
-sssd::override_shell:                    null
-sssd::override_space:                    null
-sssd::pam_verbosity:                     1
-sssd::pam_id_timeout:                    5
-sssd::pam_pwd_expiration_warning:        7
-sssd::pam_trusted_users:                 null
-sssd::pam_public_domains:                null
-sssd::reconnection_retries:              3
-sssd::re_expression:                     null
-sssd::services:                          ['nss','pam','ssh','sudo']
-sssd::ssh_hash_known_hosts:              true
-sssd::ssh_known_hosts_timeout:           null
-sssd::sudo_timed:                        false
-sssd::try_inotify:                       true
-sssd::user:                              null
-sssd::user_attributes:                   null
-sssd::vetoed_shells:                     null
+### These parameters are used inside templates that set values
+### inside of the sssd config file (usually /etc/sssd/sssd.conf).
+
+# sssd main options:
+sssd::sssd_description: null
+sssd::sssd_domains: []
+sssd::sssd_services: ['nss','pam','ssh','sudo']
+sssd::sssd_config_file_version: 2
+sssd::sssd_debug_level: null
+sssd::sssd_debug_timestamps: true
+sssd::sssd_debug_microseconds: false
+sssd::sssd_default_domain_suffix: null
+sssd::sssd_full_name_format: null
+sssd::sssd_krb5_rcache_dir: null
+sssd::sssd_override_space: null
+sssd::sssd_reconnection_retries: 3
+sssd::sssd_re_expression: null
+sssd::sssd_try_inotify: true
+sssd::sssd_user: null
+
+# sssd autofs options:
+sssd::autofs_description: null
+sssd::autofs_debug_level: null
+sssd::autofs_debug_timestamps: true
+sssd::autofs_debug_microseconds: false
+sssd::autofs_negative_timeout: null
+
+# sssd nss options:
+sssd::nss_description: null
+sssd::nss_command: null
+sssd::nss_debug_level: null
+sssd::nss_debug_timestamps: true
+sssd::nss_debug_microseconds: false
+sssd::nss_default_shell: null
+sssd::nss_enum_cache_timeout: 120
+sssd::nss_entry_cache_nowait_percentage: 0
+sssd::nss_entry_negative_timeout: 15
+sssd::nss_fallback_homedir: null
+sssd::nss_filter_users: 'root'
+sssd::nss_filter_groups: 'root'
+sssd::nss_filter_users_in_groups: true
+sssd::nss_get_domains_timeout: null
+sssd::nss_memcache_timeout: null
+sssd::nss_override_homedir: null
+sssd::nss_override_shell: null
+sssd::nss_reconnection_retries: 3
+sssd::nss_user_attributes: null
+sssd::nss_vetoed_shells: null
+
+# sssd pac options:
+sssd::pac_description: null
+sssd::pac_allowed_uids: []
+sssd::pac_debug_level: null
+sssd::pac_debug_timestamps: true
+sssd::pac_debug_microseconds: false
+
+# sssd pam options:
+sssd::pam_description: null
+sssd::pam_command: null
+sssd::pam_debug_level: null
+sssd::pam_debug_timestamps: true
+sssd::pam_debug_microseconds: false
+sssd::pam_get_domains_timeout: null
+sssd::pam_offline_credentials_expiration: 0
+sssd::pam_offline_failed_login_attempts: 3
+sssd::pam_offline_failed_login_delay: 5
+sssd::pam_id_timeout: 5
+sssd::pam_public_domains: null
+sssd::pam_pwd_expiration_warning: 7
+sssd::pam_trusted_users: null
+sssd::pam_verbosity: 1
+sssd::pam_reconnection_retries: 3
+
+# sssd ssh options:
+sssd::ssh_description: null
+sssd::ssh_debug_level: null
+sssd::ssh_debug_timestamps: true
+sssd::ssh_debug_microseconds: false
+sssd::ssh_hash_known_hosts: true
+sssd::ssh_known_hosts_timeout: null
+
+# sssd sudo options:
+sssd::sudo_description: null
+sssd::sudo_debug_level: null
+sssd::sudo_debug_timestamps: true
+sssd::sudo_debug_microseconds: false
+sssd::sudo_timed: false
