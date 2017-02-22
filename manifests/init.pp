@@ -10,7 +10,7 @@
 #
 # == Parameters:
 #
-# === Installation / Configuration Parameters ===
+# == Installation / Configuration Parameters
 # The following parameters allow you to control the installation and
 # configuration of the sssd package.
 #
@@ -68,7 +68,7 @@
 #   The version of the tools package to be installed
 #   Default value: 'latest'
 #
-# === SIMP Integration Parameters ===
+# == SIMP Integration Parameters
 # These parameters control the integration of the sssd module with
 # other SIMP modules and services. The variables that are being set here are
 # resolved using simplib::lookup, a special function that helps SIMP
@@ -96,7 +96,7 @@
 #   Determines the location that pki will look for certificates.
 #   Default value: '/etc/pki/simp/x509'
 #
-# === Template Parameters ===
+# == Template Parameters
 # The following parameters are exposed here, but are only used inside of
 # templates that configure the sections of the sssd configuration file.
 # Futher information about which parameters are available to each section
@@ -124,13 +124,10 @@
 #   Default value: 2
 #   Used in: templates/sssd.conf.erb
 #
-# @param debug_level [Optional[Sssd::DebugLevel]]
+# @param <conf_section>_debug_level [Optional[Sssd::DebugLevel]]
 #   Sets debug_level in each section of the config file.
 #   Default value: null
 #   Used in: templates/domain.erb
-#            templates/provider/krb5.erb
-#            templates/provider/ldap.erb
-#            templates/provider/local.erb
 #            templates/service/autofs.erb
 #            templates/service/nss.erb
 #            templates/service/pac.erb
@@ -163,7 +160,6 @@
 # @param description [Optional[String]]
 #   Sets the desciption in each of the sections of the sssd config file.
 #   Default value: null
-#   Used in: -see debug_level param-
 #
 # @param domains [Array[String]]
 #   Sets the domains field in the sssd section of the sssd config file.
@@ -290,8 +286,8 @@
 #   Used in: templates/service/pam.erb
 #
 # @param reconnection_retries [Integer]
-#   Sets the value of reconnection_retries in the nss, pam, and sssd sections
-#   of the sssd config file.
+#   Sets reconnection_retries in the conf file, each section of the config
+#   file has it's own instance of this parameter, prefixed by the section name
 #   Default value: 3
 #   Used in: templates/service/pam.erb
 #            templates/service/nss.erb
@@ -343,7 +339,6 @@
 #   Default value: null
 #   Used in: templates/service/nss.erb
 #
-
 class sssd (
 
   ## These variables control the initial installation and configuration
@@ -369,55 +364,90 @@ class sssd (
   Variant[Boolean,Enum['simp']]  $pki                  = simplib::lookup('simp_options::pki', { 'default_value' => false}),
   Stdlib::Absolutepath           $app_pki_cert_source  = simplib::lookup('simp_options::pki::source', { 'default_value' => '/etc/pki/simp/x509'}),
 
-  ## The following parameters are exposed here, but are only used inside of
-  ## templates that configure the sections of the sssd configuration file.
-  ## Futher information about which parameters are available to each section
-  ## of the configuration file can be found inside the manifests that control
-  ## the corresponding sections. (ex: manifests/service/pam.pp)
+  ## Parameters for the [sssd] section of the config file:
+  Optional[String]                          $sssd_description,
+  Array[String]                             $sssd_domains,
+  Sssd::Services                            $sssd_services,
+  Integer                                   $sssd_config_file_version,
+  Optional[Sssd::DebugLevel]                $sssd_debug_level,
+  Boolean                                   $sssd_debug_timestamps,
+  Boolean                                   $sssd_debug_microseconds,
+  Optional[String]                          $sssd_default_domain_suffix,
+  Optional[String]                          $sssd_full_name_format,
+  Optional[String]                          $sssd_krb5_rcache_dir,
+  Optional[String]                          $sssd_override_space,
+  Integer                                   $sssd_reconnection_retries,
+  Optional[String]                          $sssd_re_expression,
+  Boolean                                   $sssd_try_inotify,
+  Optional[String]                          $sssd_user,
 
-  Array[String]                  $allowed_uids,
-  Optional[Integer]              $autofs_negative_timeout,
-  Optional[String]               $command,
-  Integer                        $config_file_version,
-  Optional[Sssd::DebugLevel]     $debug_level,
-  Boolean                        $debug_timestamps,
-  Boolean                        $debug_microseconds,
-  Optional[String]               $default_domain_suffix,
-  Optional[String]               $default_shell,
-  Optional[String]               $description,
-  Array[String]                  $domains,
-  Integer                        $entry_negative_timeout,
-  Integer                        $entry_cache_nowait_percentage,
-  Integer                        $enum_cache_timeout,
-  Optional[String]               $fallback_homedir,
-  String                         $filter_users,
-  Boolean                        $filter_users_in_groups,
-  String                         $filter_groups,
-  Optional[String]               $full_name_format,
-  Optional[Integer]              $get_domains_timeout,
-  Optional[String]               $krb5_rcache_dir,
-  Optional[Integer]              $memcache_timeout,
-  Integer                        $offline_credentials_expiration,
-  Integer                        $offline_failed_login_attempts,
-  Integer                        $offline_failed_login_delay,
-  Optional[String]               $override_homedir,
-  Optional[String]               $override_shell,
-  Optional[String]               $override_space,
-  Integer                        $pam_verbosity,
-  Integer                        $pam_id_timeout,
-  Integer                        $pam_pwd_expiration_warning,
-  Optional[String]               $pam_trusted_users,
-  Optional[String]               $pam_public_domains,
-  Integer                        $reconnection_retries,
-  Optional[String]               $re_expression,
-  Sssd::Services                 $services,
-  Boolean                        $ssh_hash_known_hosts,
-  Optional[Integer]              $ssh_known_hosts_timeout,
-  Boolean                        $sudo_timed,
-  Boolean                        $try_inotify,
-  Optional[String]               $user,
-  Optional[String]               $user_attributes,
-  Optional[String]               $vetoed_shells,
+  ## Parameters for the [autofs] section of the config file:
+  Optional[String]                          $autofs_description,
+  Optional[Sssd::DebugLevel]                $autofs_debug_level,
+  Boolean                                   $autofs_debug_timestamps,
+  Boolean                                   $autofs_debug_microseconds,
+  Optional[Integer]                         $autofs_autofs_negative_timeout,
+
+  ## Parameters for the [nss] section of the config file:
+  Optional[String]                          $nss_description,
+  Optional[String]                          $nss_command,
+  Optional[Sssd::DebugLevel]                $nss_debug_level,
+  Boolean                                   $nss_debug_timestamps,
+  Boolean                                   $nss_debug_microseconds,
+  Optional[String]                          $nss_default_shell,
+  Integer                                   $nss_enum_cache_timeout,
+  Integer                                   $nss_entry_cache_nowait_percentage,
+  Integer                                   $nss_entry_negative_timeout,
+  Optional[String]                          $nss_fallback_homedir,
+  String                                    $nss_filter_users,
+  String                                    $nss_filter_groups,
+  Boolean                                   $nss_filter_users_in_groups,
+  Optional[Integer]                         $nss_get_domains_timeout,
+  Optional[Integer]                         $nss_memcache_timeout,
+  Optional[String]                          $nss_override_homedir,
+  Optional[String]                          $nss_override_shell,
+  Integer                                   $nss_reconnection_retries,
+  Optional[String]                          $nss_user_attributes,
+  Optional[String]                          $nss_vetoed_shells,
+
+  ## Parameters for the [pac] section of the config file:
+  Optional[String]                          $pac_description,
+  Array[String]                             $pac_allowed_uids,
+  Optional[Sssd::DebugLevel]                $pac_debug_level,
+  Boolean                                   $pac_debug_timestamps,
+  Boolean                                   $pac_debug_microseconds,
+
+  ## Parameters for the [pam] section of the config file:
+  Optional[String]                          $pam_description,
+  Optional[String]                          $pam_command,
+  Optional[Sssd::DebugLevel]                $pam_debug_level,
+  Boolean                                   $pam_debug_timestamps,
+  Boolean                                   $pam_debug_microseconds,
+  Optional[Integer]                         $pam_get_domains_timeout,
+  Integer                                   $pam_offline_credentials_expiration,
+  Integer                                   $pam_offline_failed_login_attempts,
+  Integer                                   $pam_offline_failed_login_delay,
+  Integer                                   $pam_pam_id_timeout,
+  Optional[String]                          $pam_pam_public_domains,
+  Integer                                   $pam_pam_pwd_expiration_warning,
+  Optional[String]                          $pam_pam_trusted_users,
+  Integer                                   $pam_pam_verbosity,
+  Integer                                   $pam_reconnection_retries,
+
+  ## Parameters for the [ssh] section of the config file:
+  Optional[String]                          $ssh_description,
+  Optional[Sssd::DebugLevel]                $ssh_debug_level,
+  Boolean                                   $ssh_debug_timestamps,
+  Boolean                                   $ssh_debug_microseconds,
+  Boolean                                   $ssh_ssh_hash_known_hosts,
+  Optional[Integer]                         $ssh_ssh_known_hosts_timeout,
+
+  ## Parameters for the [sudo] section of the config file:
+  Optional[String]                          $sudo_description,
+  Optional[Sssd::DebugLevel]                $sudo_debug_level,
+  Boolean                                   $sudo_debug_timestamps,
+  Boolean                                   $sudo_debug_microseconds,
+  Boolean                                   $sudo_sudo_timed,
 
 ) {
 
