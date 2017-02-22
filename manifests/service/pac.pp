@@ -1,31 +1,27 @@
 # == Class: sssd::service::pac
 #
 # This class sets up the [pac] section of /etc/sssd.conf.
+# You may only have one of these per system.
+#
+# This class should be controlled via hiera, by setting the values 
+# of the keys exposed in init.pp that correspond to this section
+# of the conf file. 
 #
 # == Authors
 #
-# == Trevor Vaughan <mailto:tvaughan@onyxpoint.com>
+# * Trevor Vaughan <mailto:tvaughan@onyxpoint.com>
+# * Clayton Mentzer <mailto:clayton.mentzer@onyxpoint.com>
 #
-# == Parameters available in this template:
-# allowed_uids
-# debug_level
-# debug_timestamps
-# debug_microseconds
-# description
-
 class sssd::service::pac {
-
+  assert_private()
   include '::sssd'
 
-  # These varaibles are referenced inside the autofs template, and
-  # because we don't want to worry about scope inside of the template
-  # we handle it here.
-
-  $description        = $sssd::description
-  $debug_level        = $sssd::debug_level
-  $debug_timestamps   = $sssd::debug_timestamps
-  $debug_microseconds = $sssd::debug_microseconds
-  $allowed_uids       = $sssd::allowed_uids
+  # These varaibles are referenced inside the pac template. 
+  $allowed_uids       = $sssd::pac_allowed_uids
+  $description        = $sssd::pac_description
+  $debug_level        = $sssd::pac_debug_level
+  $debug_timestamps   = $sssd::pac_debug_timestamps
+  $debug_microseconds = $sssd::pac_debug_microseconds
 
   concat::fragment { 'sssd_pac.service':
     target  => $sssd::conf_file_path,

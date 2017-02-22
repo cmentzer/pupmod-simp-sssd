@@ -7,23 +7,10 @@
 # of the keys exposed in init.pp that correspond to this section
 # of the conf file. 
 #
-# Example Use:
-## In Hiera:
-## sssd::autofs_negative_timeout: 3
-## sssd::autofs_debug_level: 3
-## sssd::autofs_description: 'This is the autofs section of the sssd conf file'
-#
-# Result: 
-## In sssd.conf: 
-## [autofs]
-## description = 'This is the autofs section of the sssd conf file'
-## debug_level = 3
-## autofs_negative_timeout = 3
-#
 # == Authors
 #
-# Trevor Vaughan <mailto:tvaughan@onyxpoint.com>
-# Clayton Mentzer <mailto:clayton.mentzer@onyxpoint.com>
+# * Trevor Vaughan <mailto:tvaughan@onyxpoint.com>
+# * Clayton Mentzer <mailto:clayton.mentzer@onyxpoint.com>
 #
 class sssd::service::autofs {
   assert_private()

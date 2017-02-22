@@ -1,32 +1,26 @@
 # == Class: sssd::service::ssh
 #
 # This class sets up the [ssh] section of /etc/sssd.conf.
+# You may only have one of these per system.
+#
+# This class should be controlled via hiera, by setting the values 
+# of the keys exposed in init.pp that correspond to this section
+# of the conf file. 
 #
 # == Authors
 #
-# == Trevor Vaughan <mailto:tvaughan@onyxpoint.com>
+# * Trevor Vaughan <mailto:tvaughan@onyxpoint.com>
+# * Clayton Mentzer <mailto:clayton.mentzer@onyxpoint.com>
 #
-# == Parameters available to this template:
-# debug_level
-# debug_timestampts
-# debug_microseconds
-# description
-# ssh_hash_known_hosts
-# ssh_known_hosts_timeout
-#
-
 class sssd::service::ssh {
 
   include '::sssd'
 
-  # These varaibles are referenced inside the autofs template, and
-  # because we don't want to worry about scope inside of the template
-  # we handle it here.
-
-  $description             = $sssd::description
-  $debug_level             = $sssd::debug_level
-  $debug_timestamps        = $sssd::debug_timestamps
-  $debug_microseconds      = $sssd::debug_microseconds
+  # These varaibles are referenced inside the ssh template.
+  $description             = $sssd::ssh_description
+  $debug_level             = $sssd::ssh_debug_level
+  $debug_timestamps        = $sssd::ssh_debug_timestamps
+  $debug_microseconds      = $sssd::ssh_debug_microseconds
   $ssh_hash_known_hosts    = $sssd::ssh_hash_known_hosts
   $ssh_known_hosts_timeout = $sssd::ssh_known_hosts_timeout
 
